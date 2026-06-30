@@ -88,9 +88,9 @@ export default function Landing() {
           axios.get(`${API_BASE_URL}/api/issues/stats`),
           supabase
             .from('issues')
-            .select('id, tracking_id, title, location_address, photo_url, created_at, resolved_at, category, severity, status')
+            .select('id, tracking_id, title, location_address, photo_url, created_at, resolution_verified_at, category, severity, status')
             .eq('status', 'resolved')
-            .order('resolved_at', { ascending: false, nullsFirst: false })
+            .order('resolution_verified_at', { ascending: false, nullsFirst: false })
             .limit(6),
           supabase
             .from('issues')

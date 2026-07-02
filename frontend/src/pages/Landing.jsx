@@ -75,7 +75,7 @@ export default function Landing() {
   const reportedCount = useCountUp(stats?.total || 0);
   const resolvedCount = useCountUp(stats?.resolved_total || 0);
   const avgDays = useCountUp(stats?.avg_resolution_days || 0);
-  const activeCities = useCountUp(6);
+  const activeCities = useCountUp(stats?.active_cities || 0);
 
   useEffect(() => {
     const load = async () => {
@@ -115,6 +115,7 @@ export default function Landing() {
   }, []);
 
   const tickerItems = useMemo(() => [...TICKER_ITEMS, ...TICKER_ITEMS], []);
+  const formatStatCardValue = (value) => `${Math.max(0, Math.round(Number(value || 0))).toLocaleString()}+`;
 
   return (
     <div className="min-h-screen bg-civic-off text-civic-navy">
@@ -207,10 +208,10 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-4 md:grid-cols-4">
             {[
-              { title: '10,000+ Issues Reported', value: `${reportedCount.toLocaleString()}+`, accent: 'border-civic-blue', subtitle: 'Citizen-led visibility' },
-              { title: '8,200+ Resolved', value: `${resolvedCount.toLocaleString()}+`, accent: 'border-civic-green', subtitle: 'Verified results' },
-              { title: '2.4 Days Avg Resolution', value: '2.4d', accent: 'border-civic-blue', subtitle: 'Faster follow-through' },
-              { title: '6 Cities Active', value: '6', accent: 'border-civic-blue', subtitle: 'Growing across India' },
+              { title: 'Issues Reported', value: formatStatCardValue(stats?.total ?? reportedCount), accent: 'border-civic-blue', subtitle: 'Citizen-led visibility' },
+              { title: 'Resolved', value: formatStatCardValue(stats?.resolved_total ?? resolvedCount), accent: 'border-civic-green', subtitle: 'Verified results' },
+              { title: 'Avg Resolution', value: formatStatCardValue(stats?.avg_resolution_days ?? avgDays), accent: 'border-civic-blue', subtitle: 'Faster follow-through' },
+              { title: 'Cities Active', value: formatStatCardValue(stats?.active_cities ?? activeCities), accent: 'border-civic-blue', subtitle: 'Growing across India' },
             ].map((item) => (
               <div key={item.title} className={`card-surface card-surface-hover border-l-4 ${item.accent} p-6`}>
                 <p className="text-3xl font-black text-civic-navy">{item.value}</p>

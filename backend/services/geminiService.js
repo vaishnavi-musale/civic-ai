@@ -216,7 +216,7 @@ const callGroq = async ({ model, messages, system, prompt, max_tokens = 1000, te
 const analyzeIssueImage = async (imageBase64, mimeType, userDescription) => {
   try {
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
       max_tokens: 2048,
       temperature: 0.2,
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
@@ -249,7 +249,7 @@ const checkDuplicate = async (newIssue, nearbyIssues) => {
   try {
     const cleanNearby = nearbyIssues.map(({ photo_url, photo_base64, original_description, ai_analysis, ...rest }) => rest);
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 2048,
       temperature: 0.2,
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
@@ -267,7 +267,7 @@ const checkDuplicate = async (newIssue, nearbyIssues) => {
 const verifyResolution = async (originalImageBase64, newImageBase64, issueDescription) => {
   try {
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
       max_tokens: 2048,
       temperature: 0.2,
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
@@ -303,7 +303,7 @@ const verifyResolution = async (originalImageBase64, newImageBase64, issueDescri
 const draftAdminResponse = async (issueTitle, category, newStatus, adminNotes, daysOpen) => {
   try {
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'llama-3.3-70b-versatile',
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
       prompt: `Write a citizen-friendly status update for a civic issue. Under 80 words. Professional and empathetic.\nIssue: ${issueTitle}, Category: ${category}, New status: ${newStatus}, Admin notes: ${adminNotes}, Days open: ${daysOpen}\nReturn ONLY valid JSON: { subject: string, message: string, estimated_resolution: string }`
     });
@@ -320,7 +320,7 @@ const rankIssues = async (openIssues) => {
   try {
     const clean = openIssues.map(({ id, title, category, severity, status, created_at, upvotes, confirm_count, deny_count, priority_score }) => ({ id, title, category, severity, status, created_at, upvotes, confirm_count, deny_count, priority_score }));
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 4096,
       temperature: 0.2,
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
@@ -339,7 +339,7 @@ const generateInsights = async (issuesSummary) => {
   try {
     const clean = issuesSummary.map(({ id, title, category, severity, status, created_at, upvotes, confirm_count, deny_count, priority_score }) => ({ id, title, category, severity, status, created_at, upvotes, confirm_count, deny_count, priority_score }));
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 4096,
       temperature: 0.2,
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
@@ -357,7 +357,7 @@ const generateInsights = async (issuesSummary) => {
 const processVoice = async (transcript) => {
   try {
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'llama-3.3-70b-versatile',
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
       prompt: `Clean up this voice transcript of a civic issue report from India. Fix grammar, extract key information.\nTranscript: ${transcript}\nReturn ONLY valid JSON: { cleaned_description: string, detected_category: string, detected_location: string }`
     });
@@ -373,7 +373,7 @@ const processVoice = async (transcript) => {
 const chatWithAssistant = async (userMessage, issueContext, userIssues) => {
   try {
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'llama-3.3-70b-versatile',
       system: 'You are CivicAI Assistant, a helpful civic issue tracking bot for Indian communities. Give only the final answer — no reasoning, no self-checks, no verification. Never include: "Checked", "Ready", "Proceed", "Output matches", "Word count", bracket notes, or any reference to your instructions. Never explain what you are doing. Just answer the citizen directly. Be concise and friendly. Use issue context if provided.',
       prompt: `Citizen question: ${userMessage}\nJSON context: ${JSON.stringify({ currentIssue: issueContext, recentUserIssues: userIssues })}`
     });
@@ -399,7 +399,7 @@ const chatWithAssistant = async (userMessage, issueContext, userIssues) => {
 const translateText = async (text, fromLanguage) => {
   try {
     const result = await callGroq({
-      model: 'qwen/qwen3.6-27b',
+      model: 'llama-3.3-70b-versatile',
       system: 'Return ONLY valid JSON. No markdown, no thinking, no reasoning, NEVER use <think> tags.',
       prompt: `Translate this civic issue report from ${fromLanguage} to English. Keep it natural and clear.\nText: ${text}\nReturn ONLY valid JSON: { translated_text: string, detected_language: string }`
     });

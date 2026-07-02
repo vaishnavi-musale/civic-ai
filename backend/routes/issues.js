@@ -391,14 +391,14 @@ router.get('/stats', async (req, res) => {
   try {
     const { data: issues, error } = await supabase
       .from('issues')
-      .select('id, status, created_at');
+      .select('id, status, created_at, location_address');
 
     if (error) return res.status(500).json({ error: 'Failed to fetch stats' });
 
     const total = issues.length;
 
     const now = new Date();
-    const resolvedIssues = issues.filter(i => i.status === 'resolved');
+    const resolvedIssues = issues.filter((i) => i.status === 'resolved');
     let avgResolutionDays = 0;
     if (resolvedIssues.length > 0) {
       const totalDays = resolvedIssues.reduce((sum, i) => {
@@ -408,7 +408,23 @@ router.get('/stats', async (req, res) => {
       avgResolutionDays = Math.round(totalDays / resolvedIssues.length);
     }
 
-    res.json({ total, resolved_total: resolvedIssues.length, avg_resolution_days: avgResolutionDays });
+    const activeCities = new Set(
+      issues
+        .map((issue) => {
+          const address = typeof issue.location_address === 'string' ? issue.location_address.trim() : '';
+          if (!address) return null;
+          const parts = address.split(',').map((part) => part.trim()).filter(Boolean);
+          return parts[parts.length - 1] || null;
+        })
+        .filter(Boolean)
+    ).size;
+
+    res.json({
+      total,
+      resolved_total: resolvedIssues.length,
+      avg_resolution_days: avgResolutionDays,
+      active_cities: activeCities,
+    });
   } catch (error) {
     console.error('GET /api/issues/stats error:', error);
     res.status(500).json({ error: 'Server error' });

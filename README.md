@@ -9,7 +9,7 @@ AI-powered civic issue reporting platform built for Indian communities — Vibe2
 ## Key Features
 
 - **Photo-based issue reporting** — Drag-drop / camera capture with automatic upload to Supabase Storage
-- **AI photo analysis** — Groq-powered (Qwen 3.6-27B) classification: category, severity, priority score, recommended department, emergency detection
+- **AI photo analysis** — Groq-powered (Llama 4 Scout 17B for vision, Llama 3.3 70B for text) classification: category, severity, priority score, recommended department, emergency detection
 - **Duplicate detection** — Two-layer (heuristic similarity + Groq AI) to prevent redundant reports
 - **Multilingual support** — Report in Hindi, Marathi, Tamil, Telugu, or Bengali; auto-translated to English via Groq
 - **Voice reporting** — Web Speech API recognition + Groq transcript cleanup
@@ -34,7 +34,7 @@ AI-powered civic issue reporting platform built for Indian communities — Vibe2
 | Frontend| React 19, Vite 8, Tailwind CSS 3.4, React Router 7                        |
 | Backend | Node.js, Express 5                                                         |
 | Database| Supabase (PostgreSQL) — Auth, Storage, Row Level Security                  |
-| AI      | Groq SDK (Qwen 3.6-27B model) for all analysis, chat, translation, insights|
+| AI      | Groq SDK — Llama 3.3 70B (text), Llama 4 Scout 17B (vision) |
 | Maps    | Leaflet + react-leaflet + leaflet.heat (OpenStreetMap tiles)               |
 | Icons   | Lucide React                                                               |
 | Charts  | Recharts                                                                   |
@@ -134,7 +134,7 @@ Set `ADMIN_EMAIL` / `VITE_ADMIN_EMAIL` in your `.env` to `musalevaishnavi30@gmai
 
 ## Known Limitations / Technical Notes
 
-- **AI provider:** All AI inference (photo analysis, duplicate detection, chat, translation, insights, resolution verification) runs via Groq's hosted Llama/Qwen models rather than direct Gemini API calls. The `@google/generative-ai` package is installed but unused. Groq was chosen for free-tier reliability and rate limits during hackathon development.
+- **AI provider:** All AI inference uses Groq's hosted models (Llama 3.3 70B for text tasks, Llama 4 Scout 17B for vision) rather than direct Gemini API calls. The `@google/generative-ai` package is installed but unused. Groq was chosen for free-tier reliability and rate limits during hackathon development.
 - **Mapping:** Uses OpenStreetMap + Leaflet instead of Google Maps to avoid requiring a billing account for a student project. No API key needed.
 - **Auth:** Password-based email login via Supabase Auth. Admin role is determined by matching the user's email to `ADMIN_EMAIL` env var — no separate admin signup flow.
 - **No real-time updates:** The app uses polling for data freshness rather than WebSockets or Supabase Realtime subscriptions.
